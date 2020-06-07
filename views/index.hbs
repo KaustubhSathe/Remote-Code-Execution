@@ -1,0 +1,112 @@
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+    <a class="nav-link active" id="code-tab" data-toggle="tab" href="#code" role="tab" aria-controls="code"
+        aria-selected="true">Code</a>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" id="input-tab" data-toggle="tab" href="#input" role="tab" aria-controls="input"
+        aria-selected="false">Input</a>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" id="output-tab" data-toggle="tab" href="#output" role="tab" aria-controls="output"
+        aria-selected="false">Output</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings"
+        aria-selected="false">Settings</a>
+    </li>
+    <button type="button" class="btn btn-success" style="margin-left: 20px;" onclick="run()">Run</button>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="code" role="tabpanel" aria-labelledby="code-tab"></div>
+    <div class="tab-pane fade" id="input" role="tabpanel" aria-labelledby="input-tab">
+        <textarea placeholder="input" name="input" id="inputbox"></textarea>
+    </div>
+    <div class="tab-pane fade" id="output" role="tabpanel" aria-labelledby="output-tab">
+        <textarea name="output" id="outputbox"></textarea>
+    </div>
+    <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+    
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+        <label class="input-group-text" for="language">Language</label>
+        </div>
+        <select class="custom-select" id="language">
+        <option selected value="c_cpp">C and C++</option>
+        <option value="csharp">C#</option>
+        <option value="java">Java</option>
+        <option value="javascript">Javascript</option>
+        <option value="python">Python</option>
+        <option value="golang">Go</option>
+        </select>
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+        <label class="input-group-text" for="theme">Theme</label>
+        </div>
+        <select class="custom-select" id="theme" onchange="changeTheme()">
+        <option value="ambiance">Ambiance</option>
+        <option value="chaos">Chaos</option>
+        <option value="chrome">Chrome</option>
+        <option value="clouds">Clouds</option>
+        <option value="clouds_midnight">Clouds_midnight</option>
+        <option value="cobalt">Cobalt</option>
+        <option value="crimson_editor">Crimson_editor</option>
+        <option value="dawn">Dawn</option>
+        <option selected value="dracula">Dracula</option>
+        <option value="dreamweaver">Dreamweaver</option>
+        <option value="eclipse">Eclipse</option>
+        <option value="github">Github</option>
+        <option value="gob">Gob</option>
+        <option value="gruvbox">Gruvbox</option>
+        <option value="idle_fingers">Idle_fingers</option>
+        <option value="iplastic">Iplastic</option>
+        <option value="katzenmilch">Katzenmilch</option>
+        <option value="kr_theme">Kr_theme</option>
+        <option value="kuroir">Kuroir</option>
+        <option value="merbivore">Merbivore</option>
+        <option value="merbivore_soft">Merbivore_soft</option>
+        <option value="mono_industrial">Mono_industrial</option>
+        <option value="monokai">Monokai</option>
+        <option value="nord_dark">Nord_dark</option>
+        <option value="pastel_on_dark">Pastel_on_dark</option>
+        <option value="solarized_dark">Solarized_dark</option>
+        <option value="solarized_light">Solarized_light</option>
+        <option value="sqlserver">Sqlserver</option>
+        <option value="terminal">Terminal</option>
+        <option value="textmate">Textmate</option>
+        <option value="tomorrow">Tomorrow</option>
+        <option value="tomorrow_night">Tomorrow_night</option>
+        <option value="tomorrow_night_blue">Tomorrow_night_blue</option>
+        <option value="tomorrow_night_bright">Tomorrow_night_bright</option>
+        <option value="tomorrow_night_eighties">Tomorrow_night_eighties</option>
+        <option value="twilight">Twilight</option>
+        <option value="vibrant_ink">Vibrant_ink</option>
+        <option value="xcode">Xcode</option>
+        </select>
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+        <label class="input-group-text" for="keybind">Key bindings</label>
+        </div>
+        <select class="custom-select" id="keybind" onchange="changeKeyBind()">
+        <option selected value="null">Ace</option>
+        <option value="vim">Vim</option>
+        <option value="emacs">Emacs</option>
+        <option value="sublime">Sublime</option>
+        <option value="vscode">VSCode</option>
+        </select>
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+        <label class="input-group-text" for="fontsize">Font Size</label>
+        </div>
+        <input class="form-control" type="number" value="20" id="fontsize" oninput="changeFontSize()">
+    </div>
+    </div>
+</div>
+
