@@ -29,34 +29,36 @@ app.engine("hbs", express_handlebars_1.default({
 app.get("/", (req, res) => {
     res.render("index");
 });
-app.post("/run", (req, res) => {
+app.post("/run", async (req, res) => {
     console.log(req.body);
     // res.send(req.body);
-    fs_1.default.writeFileSync(path_1.default.join(__dirname, "../code/program.cpp"), req.body.source_code);
+    fs_1.default.writeFileSync(path_1.default.join(__dirname, `../code/${req.body.uuid}.cpp`), req.body.source_code);
     const compiler = child_process_1.spawn("g++", [
-        path_1.default.join(__dirname, "../code/program.cpp"),
+        path_1.default.join(__dirname, `../code/${req.body.uuid}.cpp`),
         "-o",
-        path_1.default.join(__dirname, "../code/program.out")
+        path_1.default.join(__dirname, `../code/${req.body.uuid}.out`)
     ]);
     compiler.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
     });
     compiler.stderr.on('data', (data) => {
         console.log(`compile-stderr: ${String(data)}`);
+        res.json(data);
     });
     compiler.on('close', (data) => {
         if (data === 0) {
             console.log("Complied Successfully");
-            const executor = child_process_1.spawn(path_1.default.join(__dirname, "../code/program.out"));
-            executor.stdout.on('data', (output) => {
-                console.log(String(output));
+            child_process_1.exec(path_1.default.join(__dirname, `../code/${req.body.uuid}.out`), { maxBuffer: 1024 * 1024 * 100 }, (err, stdout, stderr) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                // console.log(String(stdout));
+                res.json(String(stdout));
+                fs_1.default.unlink(path_1.default.join(__dirname, `../code/${req.body.uuid}.out`), () => { });
+                fs_1.default.unlink(path_1.default.join(__dirname, `../code/${req.body.uuid}.cpp`), () => { });
             });
-            executor.stderr.on('data', (output) => {
-                console.log(`stderr: ${String(output)}`);
-            });
-            executor.on('close', (output) => {
-                console.log(`stdout: ${output}`);
-            });
+            // const executor = spawn(path.join(__dirname,`../code/${req.body.uuid}.out`));
         }
     });
 });

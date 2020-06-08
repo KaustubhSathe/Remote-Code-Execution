@@ -49,13 +49,13 @@ function run(){
         "body" : JSON.stringify({
             "source_code": editor.getValue(),
             "language_id": langID[document.getElementById("language").value],
-            "stdin": document.getElementById("inputbox").value
+            "stdin": document.getElementById("inputbox").value,
+            "uuid" : uuidv4(),
         })
     })
     .then(response=>response.json())
     .then(ret => {
-        console.log(ret);
-        // document.getElementById("outputbox").value = ret.
+        document.getElementById("outputbox").value = ret;
     })
     .catch((error)=>{
       console.log(error)

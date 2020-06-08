@@ -4,7 +4,7 @@ import handlebars from "express-handlebars";
 import _handlebars from "handlebars";
 import path from "path";
 import fs from "fs";
-import {spawn} from "child_process";
+import {spawn,fork,exec} from "child_process";
 import {allowInsecurePrototypeAccess} from "@handlebars/allow-prototype-access";
 const port : string|number= process.env.PORT || 5000;
 const app: express.Application = express(); 
@@ -28,15 +28,15 @@ app.get("/",(req:express.Request,res:express.Response) => {
     res.render("index");
 })
 
-app.post("/run",(req:express.Request,res:express.Response) => {
+app.post("/run",async (req:express.Request,res:express.Response) => {
     console.log(req.body);
     // res.send(req.body);
-    fs.writeFileSync(path.join(__dirname,"../code/program.cpp"),req.body.source_code);
+    fs.writeFileSync(path.join(__dirname,`../code/${req.body.uuid}.cpp`),req.body.source_code);
 
     const compiler = spawn("g++",[
-        path.join(__dirname,"../code/program.cpp"),
+        path.join(__dirname,`../code/${req.body.uuid}.cpp`),
         "-o",
-        path.join(__dirname,"../code/program.out")
+        path.join(__dirname,`../code/${req.body.uuid}.out`)
     ]);
     compiler.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
@@ -44,22 +44,26 @@ app.post("/run",(req:express.Request,res:express.Response) => {
 
     compiler.stderr.on('data', (data) => {
         console.log(`compile-stderr: ${String(data)}`);
-        res.send(data);
+        res.json(data);
     });
 
-    compiler.on('close', (data) => {
+    compiler.on('close',(data) => {
         if (data === 0) {
           console.log("Complied Successfully");
-          const executor = spawn(path.join(__dirname,"../code/program.out"));
-          executor.stdout.on('data', (output) => {
-            console.log(String(output));
+          exec(path.join(__dirname,`../code/${req.body.uuid}.out`),{maxBuffer:1024*1024*100},(err,stdout,stderr) => {
+            if(err){
+              console.error(err);
+              return;
+            }
+            // console.log(String(stdout));
+            res.json(String(stdout));
+            fs.unlink(path.join(__dirname,`../code/${req.body.uuid}.out`),() =>{});
+            fs.unlink(path.join(__dirname,`../code/${req.body.uuid}.cpp`),()=>{});
           });
-          executor.stderr.on('data', (output) => {
-            console.log(`stderr: ${String(output)}`);
-          });
-          executor.on('close', (output) => {
-            console.log(`stdout: ${output}`);
-          });
+          // const executor = spawn(path.join(__dirname,`../code/${req.body.uuid}.out`));
+          
+          
+          
         }
     });
 })
